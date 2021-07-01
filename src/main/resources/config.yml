@@ -1,0 +1,14 @@
+mystery-block:
+  mb1:
+    block: STONE
+    amount: 3
+    commands:
+      - '[consolecmd] bc 1'
+      - '[consolecmd] bc 2'
+      - '[consolecmd] bc 3'
+      - '[consolecmd] bc 4'
+    messages:
+      - '&aWao ban nhan duoc bc 1'
+      - '&aWao ban nhan duoc bc 2'
+      - '&aWao ban nhan duoc bc 3'
+      - '&aWao ban nhan duoc bc 4'

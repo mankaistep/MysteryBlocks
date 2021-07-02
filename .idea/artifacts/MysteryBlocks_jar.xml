@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MysteryBlocks:jar">
+    <output-path>D:/Minecraft/Server/1.16 Test/plugins</output-path>
+    <root id="archive" name="MysteryBlocks.jar">
+      <element id="module-output" name="MysteryBlocks" />
+    </root>
+  </artifact>
+</component>

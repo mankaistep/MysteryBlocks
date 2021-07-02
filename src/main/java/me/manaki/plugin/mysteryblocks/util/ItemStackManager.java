@@ -1,6 +1,7 @@
 package me.manaki.plugin.mysteryblocks.util;
 
 import com.google.common.collect.Maps;
+import me.manaki.plugin.mysteryblocks.MysteryBlocks;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -21,6 +22,7 @@ public class ItemStackManager {
     public ItemStackManager(ItemStack is) {
         this.is = is;
         this.meta = isNull() ? null : is.getItemMeta();
+        this.plugin = MysteryBlocks.get();
     }
 
     public ItemStackManager(Plugin plugin, ItemStack is) {

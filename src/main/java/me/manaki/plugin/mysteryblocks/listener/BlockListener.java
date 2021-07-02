@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
+import java.util.Map;
 import java.util.Random;
 
 public class BlockListener implements Listener {
@@ -23,13 +24,17 @@ public class BlockListener implements Listener {
         // Is mystery block
         try {
             var md = MysteryUtils.getMysteryBlock(id);
-            int index = new Random().nextInt(md.getCommands().size());
 
-            var cmd = md.getCommands().get(index);
-            var message = md.getMessages().get(index);
+            for (int i = 0 ; i < md.getAmount() ; i++) {
+                int index = new Random().nextInt(md.getCommands().size());
 
-            cmd.execute(player, Maps.newHashMap());
-            player.sendMessage(message);
+                var cmd = md.getCommands().get(index);
+                var message = md.getMessages().get(index);
+
+                cmd.execute(player, Map.of("%player%", player.getName()));
+                player.sendMessage(message);
+            }
+
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
         }
         finally {

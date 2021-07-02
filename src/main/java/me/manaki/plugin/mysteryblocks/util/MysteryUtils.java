@@ -26,7 +26,7 @@ public class MysteryUtils {
     private static Map<String, MysteryBlock> mysteryBlocks;
     private static List<MysteryData> mysteryData = null;
 
-    public static void init() {
+    public static void reloadConfig() {
         // Config
         mysteryBlocks = Maps.newHashMap();
         var file = new File(MysteryBlocks.get().getDataFolder(), "config.yml");
@@ -38,9 +38,13 @@ public class MysteryUtils {
             var block = Material.valueOf(configFile.getString("mystery-block." + id + ".block"));
             mysteryBlocks.put(id, new MysteryBlock(id, amount, cmd, m, block));
         }
+    }
+
+    public static void init() {
+        reloadConfig();
 
         // Data
-        file = new File(MysteryBlocks.get().getDataFolder(), "data.yml");
+        var file = new File(MysteryBlocks.get().getDataFolder(), "data.yml");
         if (!file.exists()) {
             try {
                 file.createNewFile();
@@ -62,6 +66,7 @@ public class MysteryUtils {
     }
 
     public static MysteryBlock getMysteryBlock(String id) {
+        if (dataFile == null) init();
         return mysteryBlocks.getOrDefault(id, null);
     }
 
@@ -77,19 +82,21 @@ public class MysteryUtils {
     }
 
     public static void remove(Block block) {
-        mysteryData.removeIf(md -> md.getX() == block.getX() && md.getY() == block.getY() && md.getZ() == block.getZ() && md.getWorld().equals(block.getWorld()));
+        if (dataFile == null) init();
+        mysteryData.removeIf(md -> md.getX() == block.getX() && md.getY() == block.getY() && md.getZ() == block.getZ() && md.getWorld().equals(block.getWorld().getName()));
     }
 
     public static String read(Block block) {
+        if (dataFile == null) init();
         for (MysteryData md : mysteryData) {
-            if (md.getX() == block.getX() && md.getY() == block.getY() && md.getZ() == block.getZ() && md.getWorld().equals(block.getWorld())) return md.getId();
+            if (md.getX() == block.getX() && md.getY() == block.getY() && md.getZ() == block.getZ() && md.getWorld().equals(block.getWorld().getName())) return md.getId();
         }
         return null;
     }
 
     public static void save() {
         if (dataFile == null) init();
-        dataFile.set("blocks", mysteryData.stream().map(md -> md.getId() + ";" + md.getWorld() + ";" + md.getX() + ";" + md.getY() + ";" + md.getZ()));
+        dataFile.set("blocks", mysteryData.stream().map(md -> md.getId() + ";" + md.getWorld() + ";" + md.getX() + ";" + md.getY() + ";" + md.getZ()).collect(Collectors.toList()));
         var file = new File(MysteryBlocks.get().getDataFolder(), "data.yml");
         try {
             dataFile.save(file);
@@ -105,7 +112,7 @@ public class MysteryUtils {
         var ism = new ItemStackManager(is);
 
         ism.setName("§aĐặt Mystery block");
-        ism.setTag("mysteryblocks.placer", "");
+        ism.setTag("mysteryblocks.placer", id);
 
         return is;
     }

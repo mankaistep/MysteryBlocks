@@ -13,11 +13,17 @@ public class MysteryCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
 
         if (args.length == 0) {
-            sender.sendMessage("/mysteryblocks(/md) getplacer <id>");
+            sender.sendMessage("§a/mysteryblocks(/mb) reload");
+            sender.sendMessage("§a/mysteryblocks(/mb) getplacer <id>");
             return false;
         }
 
-        if (args[0].equals("getplacer")) {
+        if (args[0].equalsIgnoreCase("reload")) {
+            MysteryUtils.reloadConfig();
+            sender.sendMessage("Ok");
+        }
+
+        else if (args[0].equals("getplacer")) {
             var id = args[1];
             var is = MysteryUtils.getPlacer(id);
             var p = (Player) sender;

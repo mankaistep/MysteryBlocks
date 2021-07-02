@@ -1,7 +1,7 @@
 name: MysteryBlocks
 version: 1.0
 api-version: 1.16
-main: me.manaki.plugin.MysteryBlocks
+main: me.manaki.plugin.mysteryblocks.MysteryBlocks
 commands:
   mysteryblocks:
     aliases: [mb]

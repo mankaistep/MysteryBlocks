@@ -2,6 +2,7 @@ package me.manaki.plugin.mysteryblocks.listener;
 
 import com.google.common.collect.Maps;
 import me.manaki.plugin.mysteryblocks.util.MysteryUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,12 +15,13 @@ import java.util.Random;
 
 public class BlockListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBreakBlock(BlockBreakEvent e) {
         var player = e.getPlayer();
         var b = e.getBlock();
         var id = MysteryUtils.read(b);
         if (id == null) return;
+        e.setDropItems(false);
 
         // Is mystery block
         try {

@@ -15,6 +15,14 @@ import java.util.Random;
 
 public class BlockListener implements Listener {
 
+    @EventHandler
+    public void onPlayerBreakBlock2(BlockBreakEvent e) {
+        var w = e.getBlock().getWorld();
+        if (MysteryUtils.getWorld().equals(w.getName())) {
+            e.setDropItems(false);
+        }
+    }
+
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerBreakBlock(BlockBreakEvent e) {
         var player = e.getPlayer();
@@ -51,6 +59,17 @@ public class BlockListener implements Listener {
         var b = e.getBlock();
         var is = e.getItemInHand();
         var id = MysteryUtils.read(is);
+
+        if (MysteryUtils.getWorld().equals(player.getWorld().getName())) {
+            if (MysteryUtils.is(is.getType())) {
+                if (!player.hasPermission("mysteryblocks.admin")) {
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
+
+
         if (id == null) return;
 
         MysteryUtils.add(id, b);

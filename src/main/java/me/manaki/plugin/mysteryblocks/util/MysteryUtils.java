@@ -22,7 +22,7 @@ public class MysteryUtils {
 
     private static FileConfiguration dataFile = null;
     private static FileConfiguration configFile = null;
-
+    private static String world;
     private static Map<String, MysteryBlock> mysteryBlocks;
     private static List<MysteryData> mysteryData = null;
 
@@ -31,6 +31,7 @@ public class MysteryUtils {
         mysteryBlocks = Maps.newHashMap();
         var file = new File(MysteryBlocks.get().getDataFolder(), "config.yml");
         configFile = YamlConfiguration.loadConfiguration(file);
+        world = configFile.getString("world");
         for (String id : configFile.getConfigurationSection("mystery-block").getKeys(false)) {
             int amount = configFile.getInt("mystery-block." + id + ".amount");
             List<Command> cmd = configFile.getStringList("mystery-block." + id + ".commands").stream().map(Command::new).collect(Collectors.toList());
@@ -65,6 +66,13 @@ public class MysteryUtils {
         }
     }
 
+    public static boolean is(Material m) {
+        for (Map.Entry<String, MysteryBlock> e : mysteryBlocks.entrySet()) {
+            if (e.getValue().getBlock() == m) return true;
+        }
+        return false;
+    }
+
     public static MysteryBlock getMysteryBlock(String id) {
         if (dataFile == null) init();
         return mysteryBlocks.getOrDefault(id, null);
@@ -87,11 +95,17 @@ public class MysteryUtils {
     }
 
     public static String read(Block block) {
-        if (dataFile == null) init();
-        for (MysteryData md : mysteryData) {
-            if (md.getX() == block.getX() && md.getY() == block.getY() && md.getZ() == block.getZ() && md.getWorld().equals(block.getWorld().getName())) return md.getId();
+        if (block.getWorld().getName().equals(world)) {
+            for (Map.Entry<String, MysteryBlock> e : mysteryBlocks.entrySet()) {
+                if (block.getType() == e.getValue().getBlock()) return e.getKey();
+            }
         }
         return null;
+//        if (dataFile == null) init();
+//        for (MysteryData md : mysteryData) {
+//            if (md.getX() == block.getX() && md.getY() == block.getY() && md.getZ() == block.getZ() && md.getWorld().equals(block.getWorld().getName())) return md.getId();
+//        }
+//        return null;
     }
 
     public static void save() {
@@ -124,4 +138,8 @@ public class MysteryUtils {
         return null;
     }
 
+    public static String getWorld() {
+        if (world == null) reloadConfig();
+        return world;
+    }
 }
